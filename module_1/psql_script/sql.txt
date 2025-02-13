@@ -1,0 +1,25 @@
+CREATE TABLE persons (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(255) NOT NULL,
+	birthday DATE NOT NULL,
+);
+
+CREATE TABLE categories (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE product (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(255) NOT NULL,
+	category INT REFERENCES categories(id),
+	price INT NOT NULL
+);
+
+CREATE TABLE persons_job (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(255) NOT NULL,
+	organization VARCHAR(255) NOT NULL,
+	salary INT NOT NULL,
+	start_work DATE NOT NULL
+);
