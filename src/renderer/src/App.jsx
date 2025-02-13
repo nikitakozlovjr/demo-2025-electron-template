@@ -46,8 +46,8 @@ function App() {
               <div className="partner-data">
                 <p className="card_heading">{person.name}</p>
                 <div className="partner-data-info">
-                  <p>{Math.floor((currentDate - person.birthday) / 31536000000) }</p>
-                  <p>{getJobPerson(persons_job, person.id)} | {"Безработный"}</p>
+                  <p>Количество лет: {Math.floor((currentDate - person.birthday) / 31536000000) }</p>
+                  {/* <p>{getJobPerson(persons_job, person.id)} | {"Безработный"}</p> */}
                   <p></p>
                 </div>
               </div>
