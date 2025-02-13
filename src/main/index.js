@@ -1,14 +1,33 @@
 import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
+import icon from '../../resources/logo.png?asset'
+import db from './db.js'
 
-async function foo(event, data) {
+// async function foo(event, data) {
+//   try {
+//     console.log(data)
+//     dialog.showMessageBox({ message: 'message back' })
+//   } catch (e) {
+//     dialog.showErrorBox('Ошибка', e)
+//   }
+// }
+
+async function getPartners() {
   try {
-    console.log(data)
-    dialog.showMessageBox({ message: 'message back' })
-  } catch (e) {
-    dialog.showErrorBox('Ошибка', e)
+    const res = await db.query('SELECT * FROM persons');
+    return res.rows;
+  } catch (error) {
+    console.log('Request has been error!')
+  }
+}
+
+async function getPersonsJob() {
+  try {
+    const res = await db.query('SELECT * FROM persons_job');
+    return res.rows;
+  } catch (error) {
+    console.log('Request has been error!')
   }
 }
 
@@ -27,6 +46,7 @@ function createWindow() {
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
+    mainWindow.webContents.openDevTools(); 
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
@@ -41,10 +61,14 @@ function createWindow() {
   }
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   electronApp.setAppUserModelId('com.electron')
 
-  ipcMain.handle('sendSignal', foo)
+  await db.connect(); // connect db
+
+  // ipcMain.handle('sendSignal', foo)
+  ipcMain.handle('getPartners', getPartners)
+  ipcMain.handle('getPersonsJob', getPersonsJob)
 
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
